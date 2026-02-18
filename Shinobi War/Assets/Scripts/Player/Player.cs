@@ -66,6 +66,7 @@ public class Player : MonoBehaviour
     void Attack()
     {
         animator.SetTrigger("Attack");
+
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, checkRadius, playerLayer);
 
         foreach(Collider2D hit in hitEnemies)
