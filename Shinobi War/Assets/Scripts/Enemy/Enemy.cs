@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] GameObject firePoint;
     [SerializeField] Transform player;
+    [SerializeField] Animator animator;
 
     [Header("Shooting Settings")]
     [SerializeField] float fireRate = 1f;
@@ -28,10 +29,15 @@ public class Enemy : MonoBehaviour
         if(distanceFromPlayer < lineOfSite && distanceFromPlayer > shootingRange)
         {
             transform.position = Vector2.MoveTowards(this.transform.position,player.position,speed * Time.deltaTime);
+            animator.SetBool("isRunning", true);
         }
         else if(distanceFromPlayer <= shootingRange && nextFireRate < Time.time)
         {
-            Instantiate(bulletPrefab,firePoint.transform.position,Quaternion.identity);
+            animator.SetBool("isRunning", false);
+            animator.SetTrigger("Attack");
+            GameObject bullet = Instantiate(bulletPrefab,firePoint.transform.position,Quaternion.identity);
+            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+            rb.AddForce(firePoint.transform.right * bulletForce, ForceMode2D.Impulse);
             nextFireRate = Time.time + fireRate;
         }
     }

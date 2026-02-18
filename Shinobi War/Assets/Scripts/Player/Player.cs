@@ -71,7 +71,11 @@ public class Player : MonoBehaviour
 
         foreach(Collider2D hit in hitEnemies)
         {
-            Debug.Log("Enemy got hit");
+            EnemyHealth eh = hit.GetComponent<EnemyHealth>();
+            if(eh != null )
+            {
+                eh.TakeDamage(10);
+            }
         }
     }
 

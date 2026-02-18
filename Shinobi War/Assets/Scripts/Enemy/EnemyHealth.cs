@@ -1,0 +1,24 @@
+using UnityEngine;
+
+public class EnemyHealth : MonoBehaviour
+{
+    [Header("Health Settings")]
+    [SerializeField] private float maxHealth = 40f;
+    [SerializeField] private float currentHealth;
+
+    void Start()
+    {
+        currentHealth = maxHealth;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        if(currentHealth < 0)
+        {
+            currentHealth = 0;
+            Destroy(this.gameObject);
+        }
+    }
+}
