@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float bulletForce = 8f;
     [SerializeField] private float lineOfSite = 8f;
     [SerializeField] private float shootingRange = 10f;
+    [SerializeField] private int facingDirection = 1;
 
     [Header("References")]
     [SerializeField] GameObject bulletPrefab;
@@ -30,6 +31,10 @@ public class Enemy : MonoBehaviour
         {
             transform.position = Vector2.MoveTowards(this.transform.position,player.position,speed * Time.deltaTime);
             animator.SetBool("isRunning", true);
+            if(player.position.x > transform.position.x && facingDirection == -1 || player.position.x < transform.position.x && facingDirection == 1)
+            {
+                Flip();
+            }
         }
         else if(distanceFromPlayer <= shootingRange && nextFireRate < Time.time)
         {
@@ -37,9 +42,19 @@ public class Enemy : MonoBehaviour
             animator.SetTrigger("Attack");
             GameObject bullet = Instantiate(bulletPrefab,firePoint.transform.position,Quaternion.identity);
             Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-            rb.AddForce(firePoint.transform.right * bulletForce, ForceMode2D.Impulse);
+            rb.AddForce(-firePoint.transform.right * bulletForce, ForceMode2D.Impulse);
             nextFireRate = Time.time + fireRate;
         }
+        else
+        {
+            animator.SetBool("isRunning", false);
+        }
+    }
+
+    void Flip()
+    {
+        facingDirection *= -1;
+        transform.localScale = new Vector3(transform.localScale.x * -1,transform.localScale.y,transform.localScale.z);
     }
 
     void OnDrawGizmos()
