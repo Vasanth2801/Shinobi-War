@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class Player : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -20,7 +19,11 @@ public class Player : MonoBehaviour
     [Header("Inputs")]
     [SerializeField] float moveInput;
 
-   
+    [Header("Attack Settings")]
+    [SerializeField] Transform attackPoint;
+    [SerializeField] float attackRange;
+    [SerializeField] LayerMask playerLayer;
+
     private void Update()
     {
         moveInput = Input.GetAxis("Horizontal");
@@ -30,6 +33,11 @@ public class Player : MonoBehaviour
         if(moveInput > 0 && transform.localScale.x < 0 || moveInput < 0 && transform.localScale.x > 0)
         {
             Flip();
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Attack();
         }
 
         HandleAnimations();
@@ -52,6 +60,17 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
+    }
+
+    void Attack()
+    {
+        animator.SetTrigger("Attack");
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, checkRadius, playerLayer);
+
+        foreach(Collider2D hit in hitEnemies)
+        {
+            Debug.Log("Enemy got hit");
         }
     }
 
